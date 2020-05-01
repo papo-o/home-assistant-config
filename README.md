@@ -1,1 +1,2 @@
-mes premiers pas dans home assistant
+Mes premiers pas dans home assistant
+Après des débuts à tatons, j'ai pris le parti de mettre l'ensemble de mes intégrations personnelles dans des fichiers packages regroupant tous ce qui est nécessaire au composant créé.
