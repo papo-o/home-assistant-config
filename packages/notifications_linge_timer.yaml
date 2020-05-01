@@ -1,0 +1,303 @@
+notifications_linge2:
+  # recorder:
+  # sensor:
+    # - platform: statistics
+      # name: "stats lave linge"
+      # entity_id: sensor.puissance_lave_linge
+      # sampling_size: 5
+  # ## seche_linge sensors
+
+    # - platform: statistics
+      # name: "stats séche linge"
+      # entity_id: sensor.puissance_seche_linge
+      # sampling_size: 5
+
+
+  # input_boolean:
+    # lave_linge_on_off:
+      # name: "lave linge on/off"
+      # initial: off
+
+    # seche_linge_on_off:
+      # name: "seche linge on/off"
+      # initial: off
+
+
+  input_select:
+    lave_linge_status:
+      name: Status lave linge
+      options:
+        - Arret
+        - Marche
+        - Attente
+      initial: Arret
+      icon: mdi:washing-machine
+    seche_linge_status:
+      name: Status sèche linge
+      options:
+        - Arret
+        - Marche
+        - Attente
+      initial: Arret
+      icon: mdi:tumble-dryer
+
+
+
+  automation:
+  
+  - id: lave_linge_en_marche
+    alias: 'lave linge en marche'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.puissance_lave_linge
+        above: 10
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: input_select.lave_linge_status
+          state: Arret
+        - condition: state
+          entity_id: input_select.lave_linge_status
+          state: Attente
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.lave_linge_status
+          option: Marche
+      # - service: timer.cancel
+        # data:
+          # entity_id: timer.lave_linge
+
+
+  - id: lave_linge_en_attente
+    alias: "lave linge en attente"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.puissance_lave_linge
+        below: 6
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_select.lave_linge_status
+          state: Marche
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.lave_linge_status
+          option: Attente
+      # - service: timer.cancel
+        # data:
+          # entity_id: timer.lave_linge
+      # - service: timer.start
+        # data:
+          # entity_id: timer.lave_linge
+
+
+  - id: lave_linge_a_larret
+    alias: "lave linge à l'arret"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.puissance_lave_linge
+        below: 6
+        for:
+          minutes: 5
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_select.lave_linge_status
+          state: Attente
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.lave_linge_status
+          option: Arret
+      - service: notify.HA
+        data:
+          message: 'Le lave linge vient de se terminer'
+      - service: tts.google_say
+        entity_id: media_player.bureau, media_player.yamaha
+        data:
+          message: 'Le lave linge vient de se terminer'
+  
+  
+  # - id: on_lave_linge
+    # alias: 'on lave linge'
+    # trigger:
+    # - platform: numeric_state
+      # entity_id: sensor.puissance_lave_linge
+      # above: 10
+    # action:
+    # - service: homeassistant.turn_on
+      # data:
+        # entity_id: input_boolean.lave_linge_on_off
+    # - service: timer.cancel
+      # data:
+        # entity_id: timer.lave_linge
+    # - service: timer.start
+      # data:
+        # entity_id: timer.lave_linge
+
+  # - id: off_lave_linge
+    # alias: 'off lave linge'
+    # trigger:
+      # platform: event
+      # event_type: timer.finished
+      # event_data:
+        # entity_id: timer.lave_linge
+    # action:
+    # - service: homeassistant.turn_off
+      # data:
+        # entity_id: input_boolean.lave_linge_on_off
+    
+
+  # - id: notification_lave_linge_2
+    # alias: 'notify lave linge2'
+    # trigger:
+      # platform: state
+      # entity_id: input_boolean.lave_linge_on_off
+      # to: 'off'
+      # for:
+        # minutes: 3
+    # action:
+    # - service: notify.HA
+      # data:
+        # message: 'HA2 Le lave linge vient de se terminer'
+    # - service: tts.google_say
+      # entity_id: media_player.bureau, media_player.yamaha
+      # data:
+        # message: 'Le lave linge vient de se terminer'
+#############################################################
+  # - id: on_seche_linge
+    # alias: 'on seche linge'
+    # trigger:
+    # - platform: numeric_state
+      # entity_id: sensor.puissance_seche_linge
+      # above: 10
+    # action:
+    # - service: homeassistant.turn_on
+      # data:
+        # entity_id: input_boolean.seche_linge_on_off
+    # - service: timer.cancel
+      # data:
+        # entity_id: timer.seche_linge
+    # - service: timer.start
+      # data:
+        # entity_id: timer.seche_linge
+
+  # - id: off_seche_linge
+    # alias: 'off seche linge'
+    # trigger:
+      # platform: event
+      # event_type: timer.finished
+      # event_data:
+        # entity_id: timer.seche_linge
+    # action:
+    # - service: homeassistant.turn_off
+      # data:
+        # entity_id: input_boolean.seche_linge_on_off
+    
+
+  # - id: notification_seche_linge_2
+    # alias: 'notify seche linge2'
+    # trigger:
+      # platform: state
+      # entity_id: input_boolean.seche_linge_on_off
+      # to: 'off'
+      # for:
+        # minutes: 3
+    # action:
+    # - service: notify.HA
+      # data:
+        # message: 'HA2 Le seche linge vient de se terminer'
+    # - service: tts.google_say
+      # entity_id: media_player.bureau, media_player.yamaha
+      # data:
+        # message: 'Le seche linge vient de se terminer'
+  - id: seche_linge_en_marche
+    alias: 'seche linge en marche'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.puissance_seche_linge
+        above: 25
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: input_select.seche_linge_status
+          state: Arret
+        - condition: state
+          entity_id: input_select.seche_linge_status
+          state: Attente
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.seche_linge_status
+          option: Marche
+      # - service: timer.cancel
+        # data:
+          # entity_id: timer.seche_linge
+
+  - id: seche_linge_en_attente
+    alias: "seche linge en attente"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.puissance_seche_linge
+        below: 6
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_select.seche_linge_status
+          state: Marche
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.seche_linge_status
+          option: Attente
+      # - service: timer.cancel
+        # data:
+          # entity_id: timer.seche_linge
+      # - service: timer.start
+        # data:
+          # entity_id: timer.seche_linge
+
+  - id: seche_linge_a_larret
+    alias: "seche linge à l'arret"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.puissance_seche_linge
+        below: 6
+        for:
+          minutes: 8
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_select.seche_linge_status
+          state: Attente
+    action:
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.seche_linge_status
+          option: Arret
+      - service: notify.HA
+        data:
+          message: 'Le seche linge vient de se terminer'
+      - service: tts.google_say
+        entity_id: media_player.bureau, media_player.yamaha
+        data:
+          message: 'Le seche linge vient de se terminer'
+
+
+  # timer:
+      # lave_linge:
+        # duration: '00:05:00'
+      # seche_linge:
+        # duration: '00:05:00'
+
+
+
+
