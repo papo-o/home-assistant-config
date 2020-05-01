@@ -1,0 +1,14 @@
+# https://www.home-assistant.io/integrations/workday
+
+homeassistant:
+  customize:
+    binary_sensor.workday_sensor:
+      friendly_name: Jour travaillé
+  
+binary_sensor:
+  - platform: workday
+    country: FRA
+    # workdays: [mon, wed, fri]
+    # excludes: [sat, sun, holiday]
+    # add_holidays:
+      # - '2020-02-24'

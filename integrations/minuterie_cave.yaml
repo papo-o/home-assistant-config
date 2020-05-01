@@ -1,0 +1,37 @@
+## https://www.home-assistant.io/cookbook/turn_on_light_for_10_minutes_when_motion_detected/
+# https://community.home-assistant.io/t/turn-a-light-off-after-x-mins-if-it-was-turn-on-via-rule/55185
+automation:
+- id: allumez_eclairage_cave_si_mouvement_avec_minuterie
+  alias: 'Allumez eclairage cave si mouvement avec minuterie'
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.pir_escalier_cave, binary_sensor.pir_cellier
+    to: 'on'
+  action:
+  - service: timer.cancel
+    data:
+      entity_id: timer.cave
+  - service: timer.start
+    data:
+      entity_id: timer.cave
+  - service: light.turn_on
+    data:
+      entity_id: light.lumiere_cave
+
+# ##############################################
+- id: eteindre_eclairage_cave_x_minutes_apres_dernier_mouvement
+  alias: 'eteindre eclairage cave x minutes apres dernier mouvement'
+  trigger:
+    platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.cave
+  action:
+    service: light.turn_off
+    data:
+      entity_id: 
+        - light.lumiere_cave
+# ##############################################
+timer:
+    cave:
+      duration: '00:06:00'
