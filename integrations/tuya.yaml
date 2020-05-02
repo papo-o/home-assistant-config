@@ -1,0 +1,57 @@
+homeassistant:
+  customize:
+    sensor.power_caveavin:
+      icon: mdi:lightbulb
+    switch.prise2:
+      icon: mdi:power-socket-fr
+    switch.prise3:
+      icon: mdi:power-socket-fr
+
+
+tuya:
+  username: !secret tuya_username
+  password: !secret tuya_password
+  country_code: !secret tuya_country_code
+  platform: smart_life
+
+light:
+  - platform: template
+    lights:
+      light_caveavin:
+        friendly_name: 'Lumière cave à vin'
+        # level_template: '{{ 255 if is_state("switch.abc", "on") else 0 }}'
+        value_template: '{{ is_state("switch.prise_1_cave_a_vin", "on") }}'
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.prise_1_cave_a_vin
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.prise_1_cave_a_vin
+        set_level:
+          # service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
+          service_template: switch.turn_'{{ "off" }}'
+          entity_id: switch.prise_1_cave_a_vin
+
+  - platform: template
+    lights:
+      light_atelier:
+        friendly_name: 'Lumière atelier'
+        # level_template: '{{ 255 if is_state("switch.abc", "on") else 0 }}'
+        value_template: '{{ is_state("switch.prise_4_atelier", "on") }}'
+        turn_on:
+          service: switch.turn_on
+          entity_id: switch.prise_4_atelier
+        turn_off:
+          service: switch.turn_off
+          entity_id: switch.prise_4_atelier
+        set_level:
+          # service_template: switch.turn_'{{ "off" if brightness == 0 else "on" }}'
+          service_template: switch.turn_'{{ "off" }}'
+          entity_id: switch.prise_4_atelier
+sensor:
+  - platform: template
+    sensors:
+      power_caveavin:
+        friendly_name: 'Puissance lumiere cave à vin'
+        value_template: "{{(states.switch.prise_1_cave_a_vin.attributes|default(0)).current_power_w|round(2)}}"
+        unit_of_measurement: "W"
