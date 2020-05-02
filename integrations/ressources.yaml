@@ -1,0 +1,69 @@
+---
+lovelace:
+
+  resources:
+    - url: /hacsfiles/lovelace-layout-card/layout-card.js
+      type: module
+      
+    - url: /hacsfiles/decluttering-card/decluttering-card.js
+      type: module
+
+    - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js?v=0.9.3
+      type: module
+
+    - url: /hacsfiles/lovelace-fold-entity-row/fold-entity-row.js
+      type: module
+
+    - url: /local/custom_ui/weather-card/weather-card.js
+      type: module
+
+    - url: /hacsfiles/group-card/group-card.js
+      type: module
+
+    - url: /hacsfiles/custom-header/custom-header.js
+      type: module
+
+    - url: /hacsfiles/button-card/button-card.js
+      type: module
+
+    - url: /hacsfiles/lovelace-card-mod/card-mod.js
+      type: module
+
+    - url: /hacsfiles/search-card/search-card.js
+      type: module
+
+    - url: /hacsfiles/lovelace-card-tools/card-tools.js
+      type: module
+
+    - url: /hacsfiles/lovelace-auto-entities/auto-entities.js
+      type: module
+
+    - url: /hacsfiles/gauge-card/gauge-card.js
+      type: module
+
+    - url: /hacsfiles/battery-state-card/battery-state-card.js
+      type: module
+
+    # - url: 
+      # type:
+
+    # - url: 
+      # type:
+
+    # - url: 
+      # type:
+
+    # - url: 
+      # type:
+
+    # - url: 
+      # type:
+
+    # - url: 
+      # type:
+
+    # - url: 
+      # type:
+
+    # - url: 
+      # type:
