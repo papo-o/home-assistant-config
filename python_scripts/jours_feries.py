@@ -1,3 +1,6 @@
+""" https://pon.fr/home-assistant-infos-du-jour-et-du-lendemain/ """
+""" https://github.com/papo-o/home-assistant-config/blob/master/python_scripts/jours_feries.py """
+
 """  This script creates sensors that will display the saints of the day   """
 """      and the day after, of the possible holidays and birthdays         """
 """          of the day and the day after. For the birdays it              """
