@@ -1,0 +1,15 @@
+homeassistant:
+  customize: 
+    sensor.poubelle:
+      icon: mdi:trash-can-outline #mdi:recycle
+
+sensor:
+  - platform: template
+    sensors:
+      poubelle:
+        entity_id: sensor.poubelle
+        friendly_name: "Poubelle : "
+        value_template: |-
+          {% if now().strftime('%a') == 'Tue' %} Il faut sortir la verte
+          {% elif now().strftime('%a') == 'Wed' %} Il faut sortir la bleue
+          {% else %} unavailable {% endif %}
