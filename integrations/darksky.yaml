@@ -1,0 +1,71 @@
+# homeassistant:
+  # customize:
+    
+
+
+# group:
+  
+
+# # Maintain a counter
+# counter:
+  # nom_counter:
+    # name: 
+
+# binary_sensor:
+  # - platform: 
+
+# automation:
+  # - alias: 
+    # trigger:
+    # condition:
+
+
+# script:
+sensor:
+####################################################
+#                                                  #
+#                  Sensor - Darksky                #
+#                                                  #
+####################################################
+  
+## Weather Dark Sky
+  - platform: darksky
+    api_key: !secret dark_sky_key
+    forecast:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    hourly_forecast:
+      - 1
+      - 2
+      - 4
+      - 6
+      - 12
+    monitored_conditions:
+      # - icon
+      # - summary
+      # - nearest_storm_distance
+      # - nearest_storm_bearing
+      - humidity
+      # - temperature
+      # - temperature_high
+      # - temperature_low
+      # - apparent_temperature
+      # - apparent_temperature_high
+      # - apparent_temperature_low
+      # - wind_speed
+      # - wind_bearing
+      # - precip_type
+      - precip_probability
+      # - precip_accumulation
+      # - precip_intensity
+      # - precip_intensity_max
+      # - uv_index
+      # - daily_summary
+      # - pressure
+      # - visibility
+    scan_interval:
+      minutes: 60
