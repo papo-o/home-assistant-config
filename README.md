@@ -1,2 +1,2 @@
-Mes premiers pas dans home assistant<br>
+mes personnalisations home assistant<br>
 
