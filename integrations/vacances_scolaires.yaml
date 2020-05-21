@@ -15,6 +15,12 @@ homeassistant:
 sensor:
   - platform: rest
     scan_interval: '00:30:00'
+    name: vacances_scolaires
+    json_attributes_path: "$.records[0].fields"
+    json_attributes:
+      - start_date
+      - end_date
+      - description
     resource_template: |-
       {% set rows = '1'%}
       {% set zone = 'A' %}
@@ -29,7 +35,6 @@ sensor:
       {% set schoolYear = (lastYear | string) + "-" + (year | string) %}
       {%- endif %}
       https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-calendrier-scolaire&facet=start_date&facet=end_date&refine.zones=Zone+{{zone}}&rows=1&refine.annee_scolaire={{schoolYear}}&refine.location={{location}}
-    name: vacances_scolaires
     value_template: |-
       {% set aujourdhui = now().strftime('%Y-%m-%d')%}
       {% for record in value_json.records -%}
@@ -47,23 +52,20 @@ binary_sensor:
         friendly_name: "Vacances Scolaires aujourd'hui"
         value_template: |-
           {% set aujourdhui = now().strftime('%Y-%m-%d')%}
-          {% for record in value_json.records -%}
-          {% if aujourdhui >= record.fields.start_date and aujourdhui <= record.fields.end_date %} 
-          true
-          {% else %} 
+          {% if aujourdhui < states.sensor.vacances_scolaires.attributes["start_date"] or aujourdhui > states.sensor.vacances_scolaires.attributes["end_date"] %}
           false
+          {% else %} 
+          true
           {% endif %}
-          {%- endfor %}
+
   - platform: template
     sensors:
       vacances_scolaires_demain:
         friendly_name: "Vacances Scolaires demain"
         value_template: |-
           {% set demain = (as_timestamp(now()) + (24*3600)) | timestamp_custom('%Y-%m-%d', True) %}
-          {% for record in value_json.records -%}
-          {% if demain >= record.fields.start_date and demain <= record.fields.end_date %} 
-          true
-          {% else %} 
+          {% if demain < states.sensor.vacances_scolaires.attributes["start_date"] or demain > states.sensor.vacances_scolaires.attributes["end_date"] %} 
           false
+          {% else %} 
+          true
           {% endif %}
-          {%- endfor %}
