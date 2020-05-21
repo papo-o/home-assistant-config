@@ -1,7 +1,7 @@
 # # https://www.home-assistant.io/integrations/rest
 # # https://pon.fr/home-assistant-vacances-scolaires/
 # # https://github.com/papo-o/home-assistant-config/blob/master/integrations/vacances_scolaires.yaml
-# # vous avez deux choses à personnaliser, la zone et la ville
+# # vous avez deux choses à personnaliser, la zone et l'académie
 # #   {% set zone = 'A' %}
 # #   {% set location = 'Limoges' %}
 
