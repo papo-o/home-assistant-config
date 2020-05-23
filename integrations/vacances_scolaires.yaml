@@ -1,9 +1,12 @@
 # # https://www.home-assistant.io/integrations/rest
 # # https://pon.fr/home-assistant-vacances-scolaires/
 # # https://github.com/papo-o/home-assistant-config/blob/master/integrations/vacances_scolaires.yaml
-# # vous avez deux choses à personnaliser, la zone et l'académie
-# #   {% set zone = 'A' %}
+# # vous avez une chose à personnaliser,  l'academie
 # #   {% set location = 'Limoges' %}
+# # Liste des académie : 'Corse', 'Polynésie', 'Nouvelle Calédonie', 'Guyane', 'Aix-Marseille', 'Amiens', 'Besançon', 'Bordeaux',
+# # 'Clermont-Ferrand', 'Créteil', 'Dijon', 'Grenoble', 'Lille', 'Limoges', 'Lyon', 'Montpellier', 'Nancy-Metz', 'Nantes', 'Nice',
+# # 'Orléans-Tours', 'Paris', 'Poitiers', 'Reims', 'Rennes', 'Strasbourg', 'Toulouse', 'Versailles', 'Mayotte', 'Réunion', 'Martinique',
+# # 'Saint Pierre et Miquelon', 'Wallis et Futuna', 'Caen', 'Rouen', 'Guadeloupe', 'Normandie'
 
 homeassistant:
   customize:
@@ -22,9 +25,8 @@ sensor:
       - end_date
       - description
     resource_template: |-
-      {% set rows = '1'%}
-      {% set zone = 'A' %}
       {% set location = 'Limoges' %}
+      {% set rows = '1'%}
       {% set dayOfYear =  now().strftime('%j') %}
       {% set year =  now().strftime('%Y') | int %}
       {% set lastYear = year - 1 %}
@@ -34,14 +36,14 @@ sensor:
       {%- else -%}
       {% set schoolYear = (lastYear | string) + "-" + (year | string) %}
       {%- endif %}
-      https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-calendrier-scolaire&facet=start_date&facet=end_date&refine.zones=Zone+{{zone}}&rows=1&refine.annee_scolaire={{schoolYear}}&refine.location={{location}}
+      https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-calendrier-scolaire&facet=start_date&facet=end_date&rows=1&refine.annee_scolaire={{schoolYear}}&refine.location={{location}}
     value_template: |-
       {% set aujourdhui = now().strftime('%Y-%m-%d')%}
       {% for record in value_json.records -%}
       {% if aujourdhui >= record.fields.start_date and aujourdhui <= record.fields.end_date %} 
-      {%- if record.fields.description %}{{record.fields.description}} jusqu'au {{record.fields.end_date}}{% endif %}
+      {%- if record.fields.description %}{{record.fields.description}} jusqu'au {{ as_timestamp(record.fields.start_date) | timestamp_custom('%d-%m-%Y') }} {% endif %}
       {% else %} 
-      {%- if record.fields.description %} prochaines : {{record.fields.description}} {{record.fields.start_date}}{% endif %}
+      {%- if record.fields.description %} prochaines : {{record.fields.description}} {{ as_timestamp(record.fields.start_date) | timestamp_custom('%d-%m-%Y') }}{% endif %}
       {% endif %}
       {%- endfor %}
 
