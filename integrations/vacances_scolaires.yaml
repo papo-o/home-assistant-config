@@ -41,7 +41,7 @@ sensor:
       {% set aujourdhui = now().strftime('%Y-%m-%d')%}
       {% for record in value_json.records -%}
       {% if aujourdhui >= record.fields.start_date and aujourdhui <= record.fields.end_date %} 
-      {%- if record.fields.description %}{{record.fields.description}} jusqu'au {{ as_timestamp(record.fields.start_date) | timestamp_custom('%d-%m-%Y') }} {% endif %}
+      {%- if record.fields.description %}{{record.fields.description}} jusqu'au {{ as_timestamp(record.fields.end_date) | timestamp_custom('%d-%m-%Y') }} {% endif %}
       {% else %} 
       {%- if record.fields.description %} prochaines : {{record.fields.description}} {{ as_timestamp(record.fields.start_date) | timestamp_custom('%d-%m-%Y') }}{% endif %}
       {% endif %}
