@@ -1,0 +1,33 @@
+# # https://www.home-assistant.io/integrations/rest
+homeassistant:
+  customize:
+
+    sensor.pollens:
+      friendly_name: "Pollens"
+      icon: mdi:leaf-maple
+
+# listes des pollens disponible :
+# "Tilleul", "Ambroisies", "Olivier", "Plantain", "Noisetier", "Aulne", "Armoise", "Châtaignier",
+# "Urticacées", "Oseille", "Graminées", "Chêne", "Platane", "Bouleau", "Charme", "Peuplier",
+# "Frêne", "Saule", "Cyprès"
+
+sensor:
+  - platform: rest
+    scan_interval: '00:05:00'
+    method: GET
+    authentication: basic
+    headers:
+      Content-Type: application/json
+      User-Agent: Home Assistant REST sensor
+    resource_template: |-
+      {% set departement = '87' %}
+      https://www.pollens.fr/risks/thea/counties/{{departement}}
+    name: pollens
+    value_template: |-
+      {% set pollens = ["Noisetier","Graminées","Bouleau"]%}
+      {% for risque in value_json.risks -%}
+      {% for pollen in pollens -%}
+      {% if pollen == risque.pollenName and risque.level > 3 %} {{pollen}} : {{risque.level}}
+      {% endif %}
+      {%- endfor %}
+      {%- endfor %}
