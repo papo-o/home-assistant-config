@@ -29,6 +29,7 @@ sensor:
     resource_template: |-
       {% set location = 'Limoges' %}
       {% set rows = '1'%}
+      {% set aujourdhui = now().strftime('%Y-%m-%d')%}
       {% set dayOfYear =  now().strftime('%j') %}
       {% set year =  now().strftime('%Y') | int %}
       {% set lastYear = year - 1 %}
