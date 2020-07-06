@@ -8,6 +8,7 @@
 # 'Limoges', 'Lyon', 'Montpellier', 'Nancy-Metz', 'Nantes', 'Nice', 'Orléans-Tours', 'Paris', 
 # 'Poitiers', 'Reims', 'Rennes', 'Strasbourg', 'Toulouse', 'Versailles', 'Mayotte', 'Réunion', 
 # 'Martinique', 'Saint Pierre et Miquelon', 'Wallis et Futuna', 'Caen', 'Rouen', 'Guadeloupe', 'Normandie'
+# https://help.opendatasoft.com/apis/ods-search-v1/#search-api-v1
 
 
 homeassistant:
@@ -39,7 +40,9 @@ sensor:
       {%- else -%}
       {% set schoolYear = (lastYear | string) + "-" + (year | string) %}
       {%- endif %}
-      https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-calendrier-scolaire&facet=start_date&facet=end_date&rows={{rows}}&refine.annee_scolaire={{schoolYear}}&refine.location={{location}}&sort=end_date&q=start_date%3E={{aujourdhui}}
+      https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-calendrier-scolaire&facet=start_date&facet=end_date&rows={{rows}}&refine.location={{location}}&sort=-end_date&q=end_date%3E={{aujourdhui}}
+#https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-calendrier-scolaire&facet=start_date&facet=end_date&rows={{rows}}&refine.annee_scolaire={{schoolYear}}&refine.location={{location}}&sort=-end_date&q=end_date%3E={{aujourdhui}}
+#&q=start_date%3E={{aujourdhui}}&q=end_date%3E={{aujourdhui}}
     value_template: |-
       {% set aujourdhui = now().strftime('%Y-%m-%d')%}
       {% for record in value_json.records -%}
