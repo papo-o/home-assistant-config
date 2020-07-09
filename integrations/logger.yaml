@@ -1,0 +1,6 @@
+#https://www.home-assistant.io/integrations/logger
+logger:
+  default: info
+  logs:
+    homeassistant.components.rest: debug
+    custom_components.my_integration: critical
