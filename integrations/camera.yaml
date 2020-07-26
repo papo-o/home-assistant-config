@@ -1,0 +1,16 @@
+stream: 
+ffmpeg:
+  ffmpeg_bin: /usr/bin/ffmpeg
+
+binary_sensor:
+  - name: 'détection camera jardin'
+    platform: ffmpeg_motion
+    input: !secret camera_jardin # !secret camera_jardin: '-rtsp_transport tcp -i rtsp://login_camera:password_camera@192.168.xxx.xxx/profile2/media.smp'
+    reset: 5
+    changes: 15
+
+camera:
+
+  - platform: ffmpeg
+    name: "Camera Jardin"
+    input: !secret camera_jardin
