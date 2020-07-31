@@ -1,6 +1,7 @@
 """ https://pon.fr/home-assistant-infos-du-jour-et-du-lendemain/ """
 """ https://github.com/papo-o/home-assistant-config/blob/master/python_scripts/jours_feries.py """
 
+
 """  This script creates sensors that will display the saints of the day   """
 """      and the day after, of the possible holidays and birthdays         """
 """          of the day and the day after. For the birdays it              """
@@ -47,7 +48,7 @@ demain = int(aujourdhui) + 1
 mois = today.month
 annee = today.year
 day = '{:02d}'.format(today.day)
-tomorrow = '{:02d}'.format(int(day) + 1)
+tomorrow = '{:02d}'.format((today + datetime.timedelta(days=1)).day)
 month = '{:02d}'.format(today.month)
 feteaujourdhui = day+":"+month
 fetedemain = tomorrow+":"+month
@@ -57,18 +58,87 @@ def listeanniversaires(an):
     F = []  # =liste des dates des anniversaires en date-liste d=[j,m,a]
     L = []  # =liste des libelles des anniversaires
 
-    d = [3,5,1954] 
-    F.append(d)
-    L.append(u"de Pierre")
+    # d = [3,5,1954] 
+    # F.append(d)
+    # L.append(u"de Pierre")
     
-    d = [4,5,1978] 
-    F.append(d)
-    L.append(u"de Pauline")
+    # d = [4,5,1978] 
+    # F.append(d)
+    # L.append(u"de Pauline")
     
-    d = [5,1,1970] 
-    F.append(d)
-    L.append(u"de Jaqueline")
+    # d = [5,1,1970] 
+    # F.append(d)
+    # L.append(u"de Jaqueline")
 
+
+    d = [8,1,1934] 
+    F.append(d)
+    L.append(u"de Papy Michel")
+    
+    d = [10,1,1976] 
+    F.append(d)
+    L.append(u"de Laurent")
+    
+    d = [17,1,1965] 
+    F.append(d)
+    L.append(u"de Jöelle")
+    
+    d = [31,1,1961] 
+    F.append(d)
+    L.append(u"de Dominique")
+
+    d = [12,2,1995] 
+    F.append(d)
+    L.append(u"de Clémence")
+
+    d = [8,3,annee] 
+    F.append(d)
+    L.append(u"de Marjorie")
+    
+    d = [20,3,1994] 
+    F.append(d)
+    L.append(u"de notre rencontre")
+    
+    d = [14,4,annee] 
+    F.append(d)
+    L.append(u"de Louis")
+    
+    d = [16,5,2000] 
+    F.append(d)
+    L.append(u"d'Audrey")
+    
+    d = [16,7,1966]
+    F.append(d)
+    L.append(u"de Pascal")
+    
+    d = [27,7,1996] 
+    F.append(d)
+    L.append(u"de notre mariage")
+    
+    d = [3,8,1963] 
+    F.append(d)
+    L.append(u"de Catherine")
+    
+    d = [8,10,1996] 
+    F.append(d)
+    L.append(u"de Maud")
+    
+    d = [7,11,1937] 
+    F.append(d)
+    L.append(u"de Mamy Marguerite")
+    
+    d = [16,12,annee] 
+    F.append(d)
+    L.append(u"de Mamy Siria")
+    
+    d = [24,12,annee] 
+    F.append(d)
+    L.append(u"de Papy Salvator")
+    
+    d = [30,12,1963] 
+    F.append(d)
+    L.append(u"de Lina")
+    
     return F, L
 
 def estanniversaire(d):
@@ -158,15 +228,15 @@ def listejoursferies(an):
     F.append(d)
     L.append(u"Jour de l'an")
 
-    # Jour de test
-    d = [3,5,an]
-    F.append(d)
-    L.append(u"Jour de papoo")
+    # # Jour de test
+    # d = [3,5,an]
+    # F.append(d)
+    # L.append(u"Jour de papoo")
 
-    # Jour de test
-    d = [4,5,an]
-    F.append(d)
-    L.append(u"Jour de papoo1")
+    # # Jour de test
+    # d = [4,5,an]
+    # F.append(d)
+    # L.append(u"Jour de papoo1")
 
     # premier dimanche de mars
     derJourFev = datetime.date(an, 2, bissextile(an)).isocalendar()[2]
@@ -277,8 +347,6 @@ def estferie(d):
             return L[i]
     return "unavailable" 
 
-
-
 """The syntax is hass.states.set(entitiy_id, state, {dict of attributes}) """
 hass.states.set("sensor.jour_ferie" , estferie([aujourdhui,mois,annee]) ,
   {
@@ -293,7 +361,6 @@ hass.states.set("sensor.demain_ferie" , estferie([demain,mois,annee]),
     "friendly_name" : "Férié demain"
   }
 )
-
 
 """  Fête du jour et du lendemain, ne pas supprimer de date  """
 fetes = {
@@ -428,9 +495,9 @@ fetes = {
     "08:05" : "les Desire",
     "09:05" : "les Pacôme",
     "10:05" : "les Solange",
-    "11:05" : "les Estelle",
-    "12:05" : "les Achille",
-    "13:05" : "les Rolande",
+    "11:05" : "les Estelle *",
+    "12:05" : "les Achille *",
+    "13:05" : "les Rolande *",
     "14:05" : "les Matthias",
     "15:05" : "les Denise",
     "16:05" : "les Honore",
