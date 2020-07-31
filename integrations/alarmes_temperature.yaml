@@ -1,0 +1,28 @@
+# # https://community.home-assistant.io/t/battery-alert-automation-stuck-with-syntax/141216
+automation:
+  - alias: 'Alerte température'
+    trigger:
+      platform: time_pattern 
+      minutes: '/5'
+    condition:
+    - condition: template
+      value_template: >-
+        {%- set threshold = 44 -%}
+        {%- for item in states 
+            if "tempé" in item.name | lower and 
+               "CPU" not in item.name and 
+            ((item.state | int > threshold and item.state|int != 0)) %}
+            {%- if loop.first -%} {{ true }} {%- endif -%}
+        {%- endfor -%}
+    action:
+    - service: notify.HA
+      data_template:
+        title: '{{ as_timestamp(now()) | timestamp_custom("%d-%m-%Y, %H:%M:%S",True) }}'
+        message: >-
+          {%- set threshold = 44 -%}
+          La température mesurée par les capteurs suivants est trop élevée :
+          {%- for item in states -%}
+          {% if "tempé" in item.name and ((item.state | int > threshold and item.state|int != 0)) %}
+          {{ item.name }} ({{ item.state }}),
+          {%- endif -%}
+          {%- endfor -%}
