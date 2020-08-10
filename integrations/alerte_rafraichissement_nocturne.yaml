@@ -1,0 +1,55 @@
+sensor:
+   - platform: min_max
+     name: "Température moyenne étage"
+     type: mean
+     entity_ids:
+       - sensor.temperature_chambre_1
+       - sensor.temperature_chambre_maud2
+       - sensor.temperature_chambre_parents
+       - sensor.temperature_douche
+
+
+   - platform: min_max
+     name: "Température moyenne extérieure"
+     type: mean
+     entity_ids:
+       - sensor.temperature_anemometre
+       - sensor.temperature_exterieure_allee
+       - sensor.temperature_exterieure_terrasse
+input_datetime: # https://www.home-assistant.io/integrations/input_datetime/
+  night_cooling_last_notification_sent:
+    has_date: true
+
+automation:
+  - alias: "rafraichissement nocturne"
+    trigger:
+      - platform: time_pattern
+        minutes: '/5'
+        seconds: 0
+    condition:
+      condition: and # toutes les conditions doivent être vraies "TRUE" avant que l'action ne soit exécutée.
+      conditions:
+      - condition: template
+        value_template: "{{ states.sensor.temperature_moyenne_etage.state | float > (states.sensor.temperature_moyenne_exterieure.state | float + 2) }}" # +2 pour avoir un delta T suffisant pour operer un rafraichissement performant
+      - condition: template
+        value_template: '{{ now().hour > 18 }}' # seulement après 18h00
+      - condition: template # une seule notification par jour 
+        value_template: >
+          {{
+            not is_state_attr('input_datetime.night_cooling_last_notification_sent', 'day', now().day) 
+          }}
+    action:
+      - service: notify.HA
+        data_template:
+          message: 'la Température intérieure est superieure à la température extérieure ({{ states.sensor.temperature_moyenne_etage.state }} > {{ states.sensor.temperature_moyenne_exterieure.state }}). Ouverture des fenêtres recommandée'
+
+      - service: tts.google_say
+        entity_id: "media_player.bureau, media_player.salon"
+        data_template:
+          message: 'la Température intérieure est superieure à la température extérieure ({{ states.sensor.temperature_moyenne_etage.state }} > {{ states.sensor.temperature_moyenne_exterieure.state }}). Ouverture des fenêtres recommandée'
+
+
+      - service: input_datetime.set_datetime
+        entity_id: input_datetime.night_cooling_last_notification_sent
+        data_template:
+          date: "{{ now().strftime('%Y-%m-%d') }}"
