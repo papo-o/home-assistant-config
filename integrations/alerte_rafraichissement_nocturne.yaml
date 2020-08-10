@@ -1,5 +1,5 @@
 sensor:
-   - platform: min_max
+   - platform: min_max  # https://www.home-assistant.io/integrations/min_max/
      name: "Température moyenne étage"
      type: mean
      entity_ids:
@@ -9,13 +9,14 @@ sensor:
        - sensor.temperature_douche
 
 
-   - platform: min_max
+   - platform: min_max  # https://www.home-assistant.io/integrations/min_max/
      name: "Température moyenne extérieure"
      type: mean
      entity_ids:
        - sensor.temperature_anemometre
        - sensor.temperature_exterieure_allee
        - sensor.temperature_exterieure_terrasse
+       
 input_datetime: # https://www.home-assistant.io/integrations/input_datetime/
   night_cooling_last_notification_sent:
     has_date: true
@@ -49,7 +50,7 @@ automation:
           message: 'la Température intérieure est superieure à la température extérieure ({{ states.sensor.temperature_moyenne_etage.state }} > {{ states.sensor.temperature_moyenne_exterieure.state }}). Ouverture des fenêtres recommandée'
 
 
-      - service: input_datetime.set_datetime
+      - service: input_datetime.set_datetime # https://www.home-assistant.io/integrations/input_datetime/
         entity_id: input_datetime.night_cooling_last_notification_sent
         data_template:
           date: "{{ now().strftime('%Y-%m-%d') }}"
