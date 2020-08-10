@@ -4,7 +4,7 @@ sensor:
      type: mean
      entity_ids:
        - sensor.temperature_chambre_1
-       - sensor.temperature_chambre_maud2
+       - sensor.temperature_chambre_2
        - sensor.temperature_chambre_parents
        - sensor.temperature_douche
 
