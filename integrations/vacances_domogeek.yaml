@@ -1,0 +1,48 @@
+# # https://www.home-assistant.io/integrations/rest
+# # https://github.com/papo-o/home-assistant-config/blob/master/integrations/vacances_domogeek.yaml
+# # https://pon.fr/home-assistant-vacances-scolaires-domogeek
+
+homeassistant:
+  customize:
+
+    sensor.vacances_scolaires_domogeek_aujourdhui:
+      icon: mdi:check-circle
+    sensor.vacances_scolaires_domogeek_demain:
+      icon: mdi:check-circle
+
+sensor:
+  - platform: rest
+    scan_interval: '01:00:00'
+    name: vacances_domogeek_aujourdhui
+    resource_template: |-
+      {% set zone = 'B' %} {# Zone must be 'A', 'B' or 'C' #}
+      http://domogeek.entropialux.com/schoolholiday/{{ zone }}/now
+      
+  - platform: template
+    sensors:
+      vacances_scolaires_domogeek_aujourdhui:
+        friendly_name: "Vacances domogeek aujourd'hui"
+        value_template: |-
+          {% if is_state('sensor.vacances_domogeek_aujourdhui', 'False') %} 
+          false
+          {% else %} 
+          true
+          {% endif %}
+
+  - platform: rest
+    scan_interval: '01:00:00'
+    name: vacances_domogeek_demain
+    resource_template: |-
+      {% set zone = 'B' %} {# Zone must be 'A', 'B' or 'C' #}
+      http://domogeek.entropialux.com/schoolholiday/{{ zone }}/tomorrow
+      
+  - platform: template
+    sensors:
+      vacances_scolaires_domogeek_demain:
+        friendly_name: "Vacances domogeek demain"
+        value_template: |-
+          {% if is_state('sensor.vacances_domogeek_demain', 'False') %} 
+          false
+          {% else %} 
+          true
+          {% endif %}
