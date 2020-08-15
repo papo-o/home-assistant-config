@@ -1,4 +1,3 @@
-# # https://www.home-assistant.io/integrations/rest
 # # https://github.com/papo-o/home-assistant-config/blob/master/integrations/vacances_domogeek.yaml
 # # https://pon.fr/home-assistant-vacances-scolaires-domogeek
 
@@ -11,14 +10,14 @@ homeassistant:
       icon: mdi:check-circle
 
 sensor:
-  - platform: rest
+  - platform: rest # https://www.home-assistant.io/integrations/rest
     scan_interval: '01:00:00'
     name: vacances_domogeek_aujourdhui
     resource_template: |-
       {% set zone = 'B' %} {# Zone must be 'A', 'B' or 'C' #}
       http://domogeek.entropialux.com/schoolholiday/{{ zone }}/now
       
-  - platform: template
+  - platform: template #https://www.home-assistant.io/integrations/template/
     sensors:
       vacances_scolaires_domogeek_aujourdhui:
         friendly_name: "Vacances domogeek aujourd'hui"
@@ -29,14 +28,14 @@ sensor:
           true
           {% endif %}
 
-  - platform: rest
+  - platform: rest # https://www.home-assistant.io/integrations/rest
     scan_interval: '01:00:00'
     name: vacances_domogeek_demain
     resource_template: |-
       {% set zone = 'B' %} {# Zone must be 'A', 'B' or 'C' #}
       http://domogeek.entropialux.com/schoolholiday/{{ zone }}/tomorrow
       
-  - platform: template
+  - platform: template # https://www.home-assistant.io/integrations/template/
     sensors:
       vacances_scolaires_domogeek_demain:
         friendly_name: "Vacances domogeek demain"
