@@ -1,15 +1,18 @@
 # # https://github.com/papo-o/home-assistant-config/blob/master/integrations/vacances_domogeek.yaml
 # # https://pon.fr/home-assistant-vacances-scolaires-domogeek
 
-homeassistant:
-  customize:
-
-    sensor.vacances_scolaires_domogeek_aujourdhui:
-      icon: mdi:check-circle
-    sensor.vacances_scolaires_domogeek_demain:
-      icon: mdi:check-circle
-
-sensor:
+##################################################################################
+##################################################################################
+##################################################################################
+ #  ____ _____ _   _          _______     __   _____ ______ _   _  _____  ____  _____   _____ 
+ # |  _ \_   _| \ | |   /\   |  __ \ \   / /  / ____|  ____| \ | |/ ____|/ __ \|  __ \ / ____|
+ # | |_) || | |  \| |  /  \  | |__) \ \_/ /  | (___ | |__  |  \| | (___ | |  | | |__) | (___  
+ # |  _ < | | | . ` | / /\ \ |  _  / \   /    \___ \|  __| | . ` |\___ \| |  | |  _  / \___ \ 
+ # | |_) || |_| |\  |/ ____ \| | \ \  | |     ____) | |____| |\  |____) | |__| | | \ \ ____) |
+ # |____/_____|_| \_/_/    \_\_|  \_\ |_|    |_____/|______|_| \_|_____/ \____/|_|  \_\_____/ 
+binary_sensor:
+#https://www.home-assistant.io/integrations/binary_sensor/
+##################################################################################
   - platform: rest # https://www.home-assistant.io/integrations/rest
     scan_interval: '01:00:00'
     name: vacances_domogeek_aujourdhui
