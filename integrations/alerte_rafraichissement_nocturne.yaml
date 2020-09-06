@@ -1,4 +1,14 @@
+##################################################################################
+##################################################################################
+##################################################################################
+ #   _____ ______ _   _  _____  ____  _____   _____ 
+ #  / ____|  ____| \ | |/ ____|/ __ \|  __ \ / ____|
+ # | (___ | |__  |  \| | (___ | |  | | |__) | (___  
+ #  \___ \|  __| | . ` |\___ \| |  | |  _  / \___ \ 
+ #  ____) | |____| |\  |____) | |__| | | \ \ ____) |
+ # |_____/|______|_| \_|_____/ \____/|_|  \_\_____/ 
 sensor:
+##################################################################################
    - platform: min_max  # https://www.home-assistant.io/integrations/min_max/
      name: "Température moyenne étage"
      type: mean
@@ -21,7 +31,18 @@ input_datetime: # https://www.home-assistant.io/integrations/input_datetime/
   night_cooling_last_notification_sent:
     has_date: true
 
+##################################################################################
+##################################################################################
+##################################################################################
+ #          _    _ _______ ____  __  __       _______ _____ ____  _   _  _____ 
+ #     /\  | |  | |__   __/ __ \|  \/  |   /\|__   __|_   _/ __ \| \ | |/ ____|
+ #    /  \ | |  | |  | | | |  | | \  / |  /  \  | |    | || |  | |  \| | (___  
+ #   / /\ \| |  | |  | | | |  | | |\/| | / /\ \ | |    | || |  | | . ` |\___ \ 
+ #  / ____ \ |__| |  | | | |__| | |  | |/ ____ \| |   _| || |__| | |\  |____) |
+ # /_/    \_\____/   |_|  \____/|_|  |_/_/    \_\_|  |_____\____/|_| \_|_____/ 
 automation:
+# https://www.home-assistant.io/integrations/automation/
+##################################################################################
   - alias: "rafraichissement nocturne"
     trigger:
       - platform: time_pattern
@@ -30,6 +51,12 @@ automation:
     condition:
       condition: and # toutes les conditions doivent être vraies "TRUE" avant que l'action ne soit exécutée.
       conditions:
+      - condition: template
+        value_template: '{{ now().month > 4 }}' # Starting May
+      - condition: template
+        value_template: '{{ now().month < 10 }}' # Ending October
+      - condition: template
+        value_template: "{{(states.sensor.temperature_moyenne_exterieure.state | float ) > 24 }}" # Température extérieure minimale pour nécessiter un rafraichissement nocture
       - condition: template
         value_template: "{{ states.sensor.temperature_moyenne_etage.state | float > (states.sensor.temperature_moyenne_exterieure.state | float + 2) }}" # +2 pour avoir un delta T suffisant pour operer un rafraichissement performant
       - condition: template
@@ -42,15 +69,16 @@ automation:
     action:
       - service: notify.HA
         data_template:
-          message: 'la Température intérieure est superieure à la température extérieure ({{ states.sensor.temperature_moyenne_etage.state }} > {{ states.sensor.temperature_moyenne_exterieure.state }}). Ouverture des fenêtres recommandée'
+          message: 'la Température intérieure {{ states.sensor.temperature_moyenne_etage.state | round | int }} degrés est superieure à la température extérieure {{ states.sensor.temperature_moyenne_exterieure.state | round | int }}degrés. Ouverture des fenêtres recommandée'
 
       - service: tts.google_say
-        entity_id: "media_player.bureau, media_player.salon"
+        entity_id: "media_player.bureau, media_player.yamaha, media_player.salon"
         data_template:
-          message: 'la Température intérieure est superieure à la température extérieure ({{ states.sensor.temperature_moyenne_etage.state }} > {{ states.sensor.temperature_moyenne_exterieure.state }}). Ouverture des fenêtres recommandée'
+          message: 'la Température intérieure {{ states.sensor.temperature_moyenne_etage.state | round | int }} degrés est superieure à la température extérieure {{ states.sensor.temperature_moyenne_exterieure.state | round | int }}degrés. Ouverture des fenêtres recommandée'
 
 
       - service: input_datetime.set_datetime # https://www.home-assistant.io/integrations/input_datetime/
         entity_id: input_datetime.night_cooling_last_notification_sent
         data_template:
           date: "{{ now().strftime('%Y-%m-%d') }}"
+          
