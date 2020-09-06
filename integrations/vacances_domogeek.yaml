@@ -4,6 +4,31 @@
 ##################################################################################
 ##################################################################################
 ##################################################################################
+ #   _____ ______ _   _  _____  ____  _____   _____ 
+ #  / ____|  ____| \ | |/ ____|/ __ \|  __ \ / ____|
+ # | (___ | |__  |  \| | (___ | |  | | |__) | (___  
+ #  \___ \|  __| | . ` |\___ \| |  | |  _  / \___ \ 
+ #  ____) | |____| |\  |____) | |__| | | \ \ ____) |
+ # |_____/|______|_| \_|_____/ \____/|_|  \_\_____/ 
+sensor:
+##################################################################################
+  - platform: rest # https://www.home-assistant.io/integrations/rest
+    scan_interval: '01:00:00'
+    name: vacances_domogeek_aujourdhui
+    resource_template: |-
+      {% set zone = 'B' %} {# Zone must be 'A', 'B' or 'C' #}
+      http://domogeek.entropialux.com/schoolholiday/{{ zone }}/now
+
+  - platform: rest # https://www.home-assistant.io/integrations/rest
+    scan_interval: '01:00:00'
+    name: vacances_domogeek_demain
+    resource_template: |-
+      {% set zone = 'B' %} {# Zone must be 'A', 'B' or 'C' #}
+      http://domogeek.entropialux.com/schoolholiday/{{ zone }}/tomorrow
+
+##################################################################################
+##################################################################################
+##################################################################################
  #  ____ _____ _   _          _______     __   _____ ______ _   _  _____  ____  _____   _____ 
  # |  _ \_   _| \ | |   /\   |  __ \ \   / /  / ____|  ____| \ | |/ ____|/ __ \|  __ \ / ____|
  # | |_) || | |  \| |  /  \  | |__) \ \_/ /  | (___ | |__  |  \| | (___ | |  | | |__) | (___  
@@ -13,13 +38,6 @@
 binary_sensor:
 #https://www.home-assistant.io/integrations/binary_sensor/
 ##################################################################################
-  - platform: rest # https://www.home-assistant.io/integrations/rest
-    scan_interval: '01:00:00'
-    name: vacances_domogeek_aujourdhui
-    resource_template: |-
-      {% set zone = 'B' %} {# Zone must be 'A', 'B' or 'C' #}
-      http://domogeek.entropialux.com/schoolholiday/{{ zone }}/now
-      
   - platform: template #https://www.home-assistant.io/integrations/template/
     sensors:
       vacances_scolaires_domogeek_aujourdhui:
@@ -31,13 +49,6 @@ binary_sensor:
           true
           {% endif %}
 
-  - platform: rest # https://www.home-assistant.io/integrations/rest
-    scan_interval: '01:00:00'
-    name: vacances_domogeek_demain
-    resource_template: |-
-      {% set zone = 'B' %} {# Zone must be 'A', 'B' or 'C' #}
-      http://domogeek.entropialux.com/schoolholiday/{{ zone }}/tomorrow
-      
   - platform: template # https://www.home-assistant.io/integrations/template/
     sensors:
       vacances_scolaires_domogeek_demain:
