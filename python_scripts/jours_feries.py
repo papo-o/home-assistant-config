@@ -58,86 +58,18 @@ def listeanniversaires(an):
     F = []  # =liste des dates des anniversaires en date-liste d=[j,m,a]
     L = []  # =liste des libelles des anniversaires
 
-    # d = [3,5,1954] 
-    # F.append(d)
-    # L.append(u"de Pierre")
+    d = [3,5,1954] 
+    F.append(d)
+    L.append(u"de Pierre")
     
-    # d = [4,5,1978] 
-    # F.append(d)
-    # L.append(u"de Pauline")
+    d = [4,5,1978] 
+    F.append(d)
+    L.append(u"de Pauline")
     
-    # d = [5,1,1970] 
-    # F.append(d)
-    # L.append(u"de Jaqueline")
+    d = [5,1,1970] 
+    F.append(d)
+    L.append(u"de Jaqueline")
 
-
-    d = [8,1,1934] 
-    F.append(d)
-    L.append(u"de Papy Michel")
-    
-    d = [10,1,1976] 
-    F.append(d)
-    L.append(u"de Laurent")
-    
-    d = [17,1,1965] 
-    F.append(d)
-    L.append(u"de Jöelle")
-    
-    d = [31,1,1961] 
-    F.append(d)
-    L.append(u"de Dominique")
-
-    d = [12,2,1995] 
-    F.append(d)
-    L.append(u"de Clémence")
-
-    d = [8,3,annee] 
-    F.append(d)
-    L.append(u"de Marjorie")
-    
-    d = [20,3,1994] 
-    F.append(d)
-    L.append(u"de notre rencontre")
-    
-    d = [14,4,annee] 
-    F.append(d)
-    L.append(u"de Louis")
-    
-    d = [16,5,2000] 
-    F.append(d)
-    L.append(u"d'Audrey")
-    
-    d = [16,7,1966]
-    F.append(d)
-    L.append(u"de Pascal")
-    
-    d = [27,7,1996] 
-    F.append(d)
-    L.append(u"de notre mariage")
-    
-    d = [3,8,1963] 
-    F.append(d)
-    L.append(u"de Catherine")
-    
-    d = [8,10,1996] 
-    F.append(d)
-    L.append(u"de Maud")
-    
-    d = [7,11,1937] 
-    F.append(d)
-    L.append(u"de Mamy Marguerite")
-    
-    d = [16,12,annee] 
-    F.append(d)
-    L.append(u"de Mamy Siria")
-    
-    d = [24,12,annee] 
-    F.append(d)
-    L.append(u"de Papy Salvator")
-    
-    d = [30,12,1963] 
-    F.append(d)
-    L.append(u"de Lina")
     
     return F, L
 
@@ -161,7 +93,7 @@ annivdemain, agedemain = estanniversaire([demain,mois,annee])
 hass.states.set("sensor.jour_anniversaire" , annivjour ,
   {
     "icon" : "mdi:calendar-star" ,
-    "friendly_name" : "Aujourdh'hui c'est l'anniversaire ",
+    "friendly_name" : "Aujourd'hui c'est l'anniversaire ",
     "années" : agejour
   }
 )
