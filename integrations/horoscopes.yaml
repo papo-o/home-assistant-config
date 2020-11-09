@@ -1,0 +1,160 @@
+# https://www.home-assistant.io/integrations/scrape
+
+
+ #  _    _  ____  __  __ ______           _____ _____ _____  _____ _______       _   _ _______ 
+ # | |  | |/ __ \|  \/  |  ____|   /\    / ____/ ____|_   _|/ ____|__   __|/\   | \ | |__   __|
+ # | |__| | |  | | \  / | |__     /  \  | (___| (___   | | | (___    | |  /  \  |  \| |  | |   
+ # |  __  | |  | | |\/| |  __|   / /\ \  \___ \\___ \  | |  \___ \   | | / /\ \ | . ` |  | |   
+ # | |  | | |__| | |  | | |____ / ____ \ ____) |___) |_| |_ ____) |  | |/ ____ \| |\  |  | |   
+ # |_|  |_|\____/|_|  |_|______/_/    \_\_____/_____/|_____|_____/   |_/_/    \_\_| \_|  |_|   
+homeassistant:
+ #   _____ _    _  _____ _______ ____  __  __ _____  _____ ______ 
+ #  / ____| |  | |/ ____|__   __/ __ \|  \/  |_   _|/ ____|  ____|
+ # | |    | |  | | (___    | | | |  | | \  / | | | | (___ | |__   
+ # | |    | |  | |\___ \   | | | |  | | |\/| | | |  \___ \|  __|  
+ # | |____| |__| |____) |  | | | |__| | |  | |_| |_ ____) | |____ 
+ #  \_____|\____/|_____/   |_|  \____/|_|  |_|_____|_____/|______|
+  customize:
+
+    sensor.scrape_belier:
+      icon: mdi:zodiac-aries
+      friendly_name: Bélier
+
+    sensor.scrape_taureau:
+      icon: mdi:zodiac-taurus
+      friendly_name: Taureau
+
+    sensor.scrape_gemeaux:
+      icon: mdi:zodiac-gemini
+      friendly_name: Gémeaux
+
+    sensor.scrape_cancer:
+      icon: mdi:zodiac-cancer
+      friendly_name: Cancer
+
+    sensor.scrape_lion:
+      icon: mdi:zodiac-leo
+      friendly_name: Lion
+
+    sensor.scrape_vierge:
+      icon: mdi:zodiac-virgo
+      friendly_name: Vierge
+
+    sensor.scrape_balance:
+      icon: mdi:zodiac-libra
+      friendly_name: Balance
+
+    sensor.scrape_scorpion:
+      icon: mdi:zodiac-scorpio
+      friendly_name: Scorpion
+
+    sensor.scrape_sagittaire:
+      icon: mdi:zodiac-sagittarius
+      friendly_name: Sagittaire
+
+    sensor.scrape_capricorne:
+      icon: mdi:zodiac-capricorn
+      friendly_name: Capricorne
+
+    sensor.scrape_verseau:
+      icon: mdi:zodiac-aquarius
+      friendly_name: Verseau
+
+    sensor.scrape_poissons:
+      icon: mdi:zodiac-pisces
+      friendly_name: Poissons
+
+ #   _____ ______ _   _  _____  ____  _____   _____ 
+ #  / ____|  ____| \ | |/ ____|/ __ \|  __ \ / ____|
+ # | (___ | |__  |  \| | (___ | |  | | |__) | (___  
+ #  \___ \|  __| | . ` |\___ \| |  | |  _  / \___ \ 
+ #  ____) | |____| |\  |____) | |__| | | \ \ ____) |
+ # |_____/|______|_| \_|_____/ \____/|_|  \_\_____/ 
+sensor:
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/belier
+    name: scrape Belier
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/taureau
+    name: scrape Taureau
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/gemeaux
+    name: scrape Gemeaux
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/cancer
+    name: scrape Cancer
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/lion
+    name: scrape Lion
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/vierge
+    name: scrape Vierge
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/balance
+    name: scrape Balance
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/scorpion
+    name: scrape Scorpion
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/sagittaire
+    name: scrape Sagittaire
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/capricorne
+    name: scrape Capricorne
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/verseau
+    name: scrape Verseau
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+  - platform: scrape
+    resource: https://astro.rtl.fr/horoscope-jour-gratuit/poissons
+    name: scrape Poissons
+    select: 'div[class="sousContent"]'
+    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    scan_interval: 21600
+
+
+
