@@ -1,0 +1,91 @@
+##################################################################################
+##################################################################################
+##################################################################################
+ #  _____ _   _ _____  _    _ _______   _   _ _    _ __  __ ____  ______ _____  
+ # |_   _| \ | |  __ \| |  | |__   __| | \ | | |  | |  \/  |  _ \|  ____|  __ \ 
+ #   | | |  \| | |__) | |  | |  | |    |  \| | |  | | \  / | |_) | |__  | |__) |
+ #   | | | . ` |  ___/| |  | |  | |    | . ` | |  | | |\/| |  _ <|  __| |  _  / 
+ #  _| |_| |\  | |    | |__| |  | |    | |\  | |__| | |  | | |_) | |____| | \ \ 
+ # |_____|_| \_|_|     \____/   |_|    |_| \_|\____/|_|  |_|____/|______|_|  \_\
+input_number:
+# https://www.home-assistant.io/integrations/input_number/
+##################################################################################
+  eau_froide_1h:
+    name: eau froide 1h
+    initial: 0
+    min: 0
+    max: 9999999999
+    mode: box
+  eau_chaude_1h:
+    name: eau chaude 1h
+    initial: 0
+    min: 0
+    max: 9999999999
+    mode: box
+##################################################################################
+##################################################################################
+##################################################################################
+ #          _    _ _______ ____  __  __       _______ _____ ____  _   _  _____ 
+ #     /\  | |  | |__   __/ __ \|  \/  |   /\|__   __|_   _/ __ \| \ | |/ ____|
+ #    /  \ | |  | |  | | | |  | | \  / |  /  \  | |    | || |  | |  \| | (___  
+ #   / /\ \| |  | |  | | | |  | | |\/| | / /\ \ | |    | || |  | | . ` |\___ \ 
+ #  / ____ \ |__| |  | | | |__| | |  | |/ ____ \| |   _| || |__| | |\  |____) |
+ # /_/    \_\____/   |_|  \____/|_|  |_/_/    \_\_|  |_____\____/|_| \_|_____/ 
+automation:
+# https://www.home-assistant.io/integrations/automation/
+##################################################################################
+ 
+- id: "index eau 1h00"
+  alias: index eau 1h00
+  trigger:
+    platform: time
+    at: '00:15:00'
+  action:
+  -  service: input_number.set_value
+     data_template:
+       entity_id: input_number.eau_froide_1h
+       value: "{{ states.sensor.compteur_eau_froide.state | float }}" 
+  -  service: input_number.set_value
+     data_template:
+       entity_id: input_number.eau_chaude_1h
+       value: "{{ states.sensor.compteur_eau_chaude.state | float }}"  
+
+- id: "notification fuite eau froide"
+  alias: "notification fuite eau froide"
+  trigger:  
+    platform: time # https://www.home-assistant.io/docs/automation/trigger/#time-pattern-trigger
+    at:
+      - "05:40:00"
+  condition:
+  - condition: template 
+    value_template: > 
+      {{states.sensor.compteur_eau_froide.state | float > states.input_number.eau_froide_1h.state | float }}
+  action:
+    - service: notify.telegram
+      data_template:
+        message: "fuite d'eau froide détectée de {{1000*(states.sensor.compteur_eau_froide.state | float - states.input_number.eau_froide_1h.state | float) | round(2)}} litre(s)"
+    - service: persistent_notification.create
+      data_template:
+        title: "fuite d'eau froide"
+        message: "fuite d'eau froide détectée de {{1000*(states.sensor.compteur_eau_froide.state | float - states.input_number.eau_froide_1h.state | float)*1000 | round(2)}} litre(s)"
+        notification_id: "fuite d'eau froide"
+
+- id: "notification fuite eau chaude"
+  alias: "notification fuite eau chaude"
+  trigger:  
+    platform: time # https://www.home-assistant.io/docs/automation/trigger/#time-pattern-trigger
+    at:
+      - "05:40:00"
+  condition:
+  - condition: template 
+    value_template: > 
+      {{states.sensor.compteur_eau_chaude.state | float > states.input_number.eau_chaude_1h.state | float }}
+  action:
+    - service: notify.telegram
+      data_template:
+        message: "fuite d'eau chaude détectée de {{1000*(states.sensor.compteur_eau_chaude.state | float - states.input_number.eau_chaude_1h.state | float) | round(2)}} litre(s)"
+    - service: persistent_notification.create
+      data_template:
+        title: "fuite d'eau chaude"
+        message: "fuite d'eau chaude détectée de {{1000*(states.sensor.compteur_eau_chaude.state | float - states.input_number.eau_chaude_1h.state | float) | round(2)}} litre(s)"
+        notification_id: "fuite d'eau chaude"
