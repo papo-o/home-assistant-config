@@ -1,5 +1,95 @@
-# # https://community.home-assistant.io/t/battery-alert-automation-stuck-with-syntax/141216
+---
+# ##################################################################################
+# ##################################################################################
+# ##################################################################################
+ #  ____ _____ _   _          _______     __   _____ ______ _   _  _____  ____  _____   _____ 
+ # |  _ \_   _| \ | |   /\   |  __ \ \   / /  / ____|  ____| \ | |/ ____|/ __ \|  __ \ / ____|
+ # | |_) || | |  \| |  /  \  | |__) \ \_/ /  | (___ | |__  |  \| | (___ | |  | | |__) | (___  
+ # |  _ < | | | . ` | / /\ \ |  _  / \   /    \___ \|  __| | . ` |\___ \| |  | |  _  / \___ \ 
+ # | |_) || |_| |\  |/ ____ \| | \ \  | |     ____) | |____| |\  |____) | |__| | | \ \ ____) |
+ # |____/_____|_| \_/_/    \_\_|  \_\ |_|    |_____/|______|_| \_|_____/ \____/|_|  \_\_____/ 
+binary_sensor:
+# ##################################################################################
+  - platform: template
+    sensors:
+      alarme_armoires_electriques:
+        friendly_name: "alarme température armoires electriques"
+        value_template: >-
+          {% set maxthreshold = 35 %}
+          {{ 
+          (states("sensor.temperature_armoire_elec_sous_sol") | float) > maxthreshold
+          or
+          (states("sensor.temperature_armoire_elec_rdc") | float) > maxthreshold
+          }}
+# ##################################################################################
+# ##################################################################################
+# ##################################################################################
+ #           _      ______ _____ _______ _____ 
+ #     /\   | |    |  ____|  __ \__   __/ ____|
+ #    /  \  | |    | |__  | |__) | | | | (___  
+ #   / /\ \ | |    |  __| |  _  /  | |  \___ \ 
+ #  / ____ \| |____| |____| | \ \  | |  ____) |
+ # /_/    \_\______|______|_|  \_\ |_| |_____/ 
+alert: # https://www.home-assistant.io/integrations/alert/
+# ##################################################################################
+
+  alarme_temperature_armoires_electriques:
+    name: 'alarme température armoires electriques'
+    entity_id: binary_sensor.alarme_armoires_electriques
+    state: 'on'
+    repeat:
+      - 15
+      - 30
+      - 60
+    skip_first: false
+    data:
+      inline_keyboard:
+        - 'Inhiber alerte:/inhiber_alarme_temperature_armoires_electriques, Réactiver alerte:/reactiver_alarme_temperature_armoires_electriques'
+    message: >-
+      "la température d'une armoire électrique est trop haute, 
+      sous sol : {{ states.sensor.temperature_armoire_elec_sous_sol.state }}°C, 
+      rez de chaussée {{ states.sensor.temperature_armoire_elec_rdc.state }}°C
+      "
+    done_message: "la température des armoires électriques est normale"
+    notifiers:
+      - telegram
+      - all_chromecast
+      - ios
+      - pushbullet
+# ##################################################################################
+# ##################################################################################
+# ##################################################################################
+ #          _    _ _______ ____  __  __       _______ _____ ____  _   _  _____ 
+ #     /\  | |  | |__   __/ __ \|  \/  |   /\|__   __|_   _/ __ \| \ | |/ ____|
+ #    /  \ | |  | |  | | | |  | | \  / |  /  \  | |    | || |  | |  \| | (___  
+ #   / /\ \| |  | |  | | | |  | | |\/| | / /\ \ | |    | || |  | | . ` |\___ \ 
+ #  / ____ \ |__| |  | | | |__| | |  | |/ ____ \| |   _| || |__| | |\  |____) |
+ # /_/    \_\____/   |_|  \____/|_|  |_/_/    \_\_|  |_____\____/|_| \_|_____/ 
 automation:
+# ##################################################################################
+  - alias: "Telegram callback to stop alerts for Alert temperature armoires electriques"
+    trigger:
+      - platform: event
+        event_type: telegram_callback
+        event_data:
+          data: "/inhiber_alarme_temperature_armoires_electriques"
+    action:
+      - service: alert.turn_off
+        target:
+          entity_id: alert.alarme_temperature_armoires_electriques
+   
+  - alias: "Telegram callback to restart alerts for Alert temperature armoires electriques"
+    trigger:
+      - platform: event
+        event_type: telegram_callback
+        event_data:
+          data: "/reactiver_alarme_temperature_armoires_electriques"
+    action:
+      - service: alert.turn_on
+        target:
+          entity_id: alert.alarme_temperature_armoires_electriques
+
+# préalarme incendie utilisant les capteurs de températures des pieces
   - alias: 'Alerte température'
     trigger:
       platform: time_pattern 
@@ -7,22 +97,48 @@ automation:
     condition:
     - condition: template
       value_template: >-
-        {%- set threshold = 44 -%}
+        {%- set threshold = 40 -%}
         {%- for item in states 
-            if "tempé" in item.name | lower and 
+            if "Tempé" in item.name | lower and 
                "CPU" not in item.name and 
-            ((item.state | int > threshold and item.state|int != 0)) %}
+               "chauffage" not in item.name and
+            ((item.state | int > threshold and item.state | int != 0)) %}
             {%- if loop.first -%} {{ true }} {%- endif -%}
         {%- endfor -%}
     action:
-    - service: notify.HA
+    - service: notify.telegram
       data_template:
         title: '{{ as_timestamp(now()) | timestamp_custom("%d-%m-%Y, %H:%M:%S",True) }}'
         message: >-
-          {%- set threshold = 44 -%}
+          {%- set threshold = 40 -%}
           La température mesurée par les capteurs suivants est trop élevée :
           {%- for item in states -%}
-          {% if "tempé" in item.name and ((item.state | int > threshold and item.state|int != 0)) %}
+          {% if "Tempé" in item.name and ((item.state | int > threshold and item.state | int != 0)) %}
           {{ item.name }} ({{ item.state }}),
           {%- endif -%}
           {%- endfor -%}
+
+  # - alias: 'Alarme Temp Haute armoire elec sous sol'
+    # trigger:
+      # platform: state
+      # entity_id: sensor.temperature_armoire_elec_sous_sol
+    # condition:
+      # condition: template
+      # value_template: '{{ (states("sensor.temperature_armoire_elec_sous_sol") | float) > 30 }}'
+    # action:
+      # - service: notify.telegram
+        # data_template:
+          # message: 'Temperature: {{ states.sensor.temperature_armoire_elec_sous_sol.state }}'
+
+  # - alias: 'Alarme Temp Haute armoire elec rdc'
+    # trigger:
+      # platform: state
+      # entity_id: sensor.temperature_armoire_elec_rdc
+    # condition:
+      # condition: template
+      # value_template: '{{ (states("sensor.temperature_armoire_elec_rdc") | float) > 30 }}'
+    # action:
+      # - service: notify.telegram
+        # data_template:
+          # message: 'Temperature: {{ states.sensor.temperature_armoire_elec_rdc.state }}'
+
