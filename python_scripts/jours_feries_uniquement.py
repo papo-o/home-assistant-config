@@ -67,13 +67,8 @@ def datepaques(an):
     mois=n
     return [jour, mois, an]
 
-""" la fête des grands-mères est fixée au premier dimanche de mars"""
-""" calcul du jour de la fête de mères"""
-""" la fête des mères est fixée au dernier dimanche de mai sauf si cette date coïncide avec celle de la Pentecôte"""
-""" auquel cas elle a lieu le premier dimanche de juin."""
-""" la fête des pères est fixée au 3e dimanche de juin."""
+
 """ Pentecôte = Pâques + 49 jours """
-""" la fête des grands-pères est fixée au premier dimanche d'octobre"""
 
 def bissextile(annee):
     if (annee % 4) == 0:
@@ -109,15 +104,6 @@ def listejoursferies(an):
     # d = [3,11,an]
     # F.append(d)
     # L.append(u"Jour de papoo1")
-
-    # premier dimanche de mars
-    derJourFev = datetime.date(an, 2, bissextile(an)).isocalendar()[2]
-    if derJourFev>6:
-        derJourFev=0
-    #premDimMar = [7-derJourFev,3,an]
-    d = [7-derJourFev,3,annee]
-    F.append(d)
-    L.append(u"Fête des grands-mères")
     
     # Dimanche de Paques
     d = dp
@@ -154,24 +140,6 @@ def listejoursferies(an):
     F.append(d)
     L.append(u"Lundi de Pentecôte")
 
-    # Fete des mères
-    derJourMai = datetime.date(an, 5, 31).isocalendar()[2]
-    if derJourMai>6:
-        derJourMai=0
-    derDimMai = [31-derJourMai,5,an]
-    premDimJuin = [7-derJourMai,6,an]
-    if derDimMai == [jdp+19,mdp+1,adp]:
-        d = premDimJuin
-    else:
-        d = derDimMai
-    F.append(d)
-    L.append(u"Fête des mères")
-
-    # Fete des pères
-    d = [21-derJourMai,6,an]
-    F.append(d)
-    L.append(u"Fête des pères")
-
     # Fete Nationale
     d = [14,7,an]
     F.append(d)
@@ -181,15 +149,6 @@ def listejoursferies(an):
     d = [15,8,an]
     F.append(d)
     L.append(u"Assomption")
-
-    # premier dimanche d'octobre
-    derJourSep = datetime.date(an, 9, 30).isocalendar()[2]
-    if derJourSep>6:
-        derJourSep=0
-    #premDimOct = [7-derJourSep,3,an]
-    d = [7-derJourSep,10,an]
-    F.append(d)
-    L.append(u"Fête des grands-pères")
 
     # Toussaint
     d = [1,11,an]
