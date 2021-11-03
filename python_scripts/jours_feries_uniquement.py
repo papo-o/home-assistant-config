@@ -178,6 +178,17 @@ def estferie(d):
             return L[i]
     return "unavailable" 
 
+def ferie(d):
+    """estferie(d): => dit si une date d=[j,m,a] donnée est fériée France
+       si la date est fériée, renvoie son libellé
+       sinon, renvoie "unavailable" afin de masquer le sensor"""
+    j,m,a = d
+    F,L = listejoursferies(a)
+    for i in range(0, len(F)):
+        if j==F[i][0] and m==F[i][1] and a==F[i][2]:
+            return "on"
+    return "off"
+
 """The syntax is hass.states.set(entity_id, state, {dict of attributes}) """
 hass.states.set("sensor.jour_ferie" , estferie([aujourdhui,mois,annee]) ,
   {
@@ -190,5 +201,11 @@ hass.states.set("sensor.demain_ferie" , estferie([demain,mois,annee]),
   {
     "icon" : "mdi:creation" ,
     "friendly_name" : "Férié demain"
+  }
+)
+hass.states.set("binary_sensor.estferie" , ferie([aujourdhui,mois,annee]),
+  {
+    "icon" : "mdi:creation" ,
+    "friendly_name" : "Férié"
   }
 )
