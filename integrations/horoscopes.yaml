@@ -1,4 +1,4 @@
-# https://www.home-assistant.io/integrations/scrape
+ # https://www.home-assistant.io/integrations/scrape
 
 
  #  _    _  ____  __  __ ______           _____ _____ _____  _____ _______       _   _ _______ 
@@ -75,86 +75,83 @@ sensor:
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/belier
     name: scrape Belier
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/taureau
     name: scrape Taureau
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/gemeaux
     name: scrape Gemeaux
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/cancer
     name: scrape Cancer
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/lion
     name: scrape Lion
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/vierge
     name: scrape Vierge
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/balance
     name: scrape Balance
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/scorpion
     name: scrape Scorpion
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/sagittaire
     name: scrape Sagittaire
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/capricorne
     name: scrape Capricorne
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/verseau
     name: scrape Verseau
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
 
   - platform: scrape
     resource: https://astro.rtl.fr/horoscope-jour-gratuit/poissons
     name: scrape Poissons
-    select: 'div[class="sousContent"]'
-    value_template: '{{ (value.split(">")[0].split(".")[1] | replace ("En résumé", "")) | truncate(255) }}'
+    select: 'div[class="col card__body__header__resume"]'
+    value_template: '{{ (value.split(">")[0].split(".")[0]) | truncate(255) }}'
     scan_interval: 21600
-
-
-
