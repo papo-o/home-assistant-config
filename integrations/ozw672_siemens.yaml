@@ -1,0 +1,149 @@
+sensor: # http://github.com/vencakratky/API-OZW672--HomeAssistant/blob/master/configuration.yaml
+# Manage Siemens RVL480 with ozw672.01
+# Create SessionID in local network with user and password -> change ***
+  - platform: rest
+    resource: !secret ozw672
+    name: sid_token
+    value_template: '{{ value_json.SessionId }}'
+    scan_interval: 3600
+ # Read Datapoint comfort Temperature from OZW  
+  - platform: rest
+    name: Consigne confort OZW
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=926
+    value_template: '{{ value_json.Data.Value | float }}'
+    unit_of_measurement: "°C"
+    device_class: temperature
+ # Read Datapoint reduced Temperature from OZW
+  - platform: rest
+    name: 'Consigne réduit OZW'
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=927
+    value_template: '{{ value_json.Data.Value | float }}'
+    unit_of_measurement: "°C"
+    device_class: temperature
+# Read other Datapoints ...
+  - platform: rest
+    name: Consigne eco jour OZW
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=1002
+    value_template: '{{ value_json.Data.Value | float }}'
+    unit_of_measurement: "°C"
+    device_class: temperature
+
+  - platform: rest
+    name: Consigne eco nuit OZW
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=1003
+    value_template: '{{ value_json.Data.Value | float }}'
+    unit_of_measurement: "°C"
+    device_class: temperature
+
+  - platform: rest
+    name: 'Décalage consigne ambiance OZW'
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=914 
+    value_template: '{{ value_json.Data.Value | float }}'
+    unit_of_measurement: "°C"
+    device_class: temperature
+
+  - platform: rest
+    name: 'T° départ OZW'
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=958 
+    value_template: '{{ value_json.Data.Value | float }}'
+    unit_of_measurement: "°C"
+    device_class: temperature
+
+  - platform: rest
+    name: 'T° Ext OZW'
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=957
+    value_template: '{{ value_json.Data.Value | float }}'
+    unit_of_measurement: "°C"
+    device_class: temperature
+
+  - platform: rest
+    name: Contact Pompe OZW
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=923
+    value_template: '{{ value_json.Data.Value }}'
+
+  - platform: rest
+    name: Contact Chaudière OZW
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=921
+    value_template: '{{ value_json.Data.Value }}'
+
+  - platform: rest
+    name: Mode fonctionnement OZW
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=910
+    value_template: '{{ value_json.Data.Value }}'
+
+  - platform: rest
+    name: Régime OZW
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=909
+    value_template: '{{ value_json.Data.Value }}'
+
+  - platform: rest
+    name: Etat Eco OZW
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=912
+    value_template: '{{ value_json.Data.Value }}'
+
+  - platform: rest
+    name: Défaut actuel OZW
+    resource_template: http://192.168.1.77/api/menutree/read_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=924
+    value_template: '{{ value_json.Data.Value}}'
+
+
+rest_command:
+  selectionmodechauffage:
+    url: >
+      {% if is_state("input_select.modes_chauffage", "Réduit") %}
+        http://192.168.1.77/api/menutree/write_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=909&Type=Enumeration&Value=2
+      {%-elif is_state("input_select.modes_chauffage", "Automatique") %}  
+        http://192.168.1.77/api/menutree/write_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=909&Type=Enumeration&Value=1
+      {%-elif is_state("input_select.modes_chauffage", "Confort") %} 
+        http://192.168.1.77/api/menutree/write_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=909&Type=Enumeration&Value=3
+      {%-elif is_state("input_select.modes_chauffage", "Hors-gel") %} 
+        http://192.168.1.77/api/menutree/write_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=909&Type=Enumeration&Value=0
+      {% else %}
+          none
+      {% endif %}
+  chauffage_auto:
+    url: > 
+        http://192.168.1.77/api/menutree/write_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=909&Type=Enumeration&Value=1
+  chauffage_confort:
+    url: > 
+        http://192.168.1.77/api/menutree/write_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=909&Type=Enumeration&Value=3 
+  chauffage_reduit:
+    url: >
+        http://192.168.1.77/api/menutree/write_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=909&Type=Enumeration&Value=2
+  chauffage_horsgel:
+    url: >
+        http://192.168.1.77/api/menutree/write_datapoint.json?SessionId={{ states.sensor.sid_token.state }}&Id=909&Type=Enumeration&Value=0
+
+input_select:
+  modes_chauffage:
+    name: modes chauffage
+    options:
+      - Automatique
+      - Confort
+      - Réduit
+      - Hors-gel
+    initial: Automatique
+    icon: mdi:sun-snowflake
+
+automation:
+  - id: Selection_Mode_Chauffage
+    alias: Selection Mode Chauffage
+    trigger:
+    - entity_id: input_select.modes_chauffage
+      platform: state
+    action:
+    - data: {}
+      service: rest_command.selectionmodechauffage
+  
+  - id: retour_mode_chauffage_automatique
+    alias: 'Retour mode chauffage automatique'
+    trigger:
+    - platform: time
+      at: '18:30:00'
+    condition:
+    - condition: template
+      value_template: "{{(states['sensor.regime_ozw'].state == "Confort")}}"
+    action:
+    - service: rest_command.chauffage_auto
+
+    
