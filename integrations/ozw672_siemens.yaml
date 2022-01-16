@@ -142,7 +142,8 @@ automation:
       at: '18:30:00'
     condition:
     - condition: template
-      value_template: "{{(states['sensor.regime_ozw'].state == "Confort")}}"
+      value_template: >
+        {{ (states['sensor.regime_ozw'].state == "Confort") }}
     action:
     - service: rest_command.chauffage_auto
 
