@@ -67,9 +67,9 @@ automation:
       - condition: template
         value_template: '{{ now().month < 10 }}' # Ending October
       - condition: template
-        value_template: "{{(states.sensor.temperature_moyenne_exterieure.state | float ) > 24 }}" # Température extérieure minimale pour nécessiter un rafraichissement nocture
+        value_template: "{{(states.sensor.temperature_moyenne_exterieure.state | float(0) ) > 24 }}" # Température extérieure minimale pour nécessiter un rafraichissement nocture
       - condition: template
-        value_template: "{{ states.sensor.temperature_moyenne_etage.state | float > (states.sensor.temperature_moyenne_exterieure.state | float + 2) }}" # +2 pour avoir un delta T suffisant pour operer un rafraichissement performant
+        value_template: "{{ states.sensor.temperature_moyenne_etage.state | float > (states.sensor.temperature_moyenne_exterieure.state | float(0) + 2) }}" # +2 pour avoir un delta T suffisant pour operer un rafraichissement performant
       - condition: template
         value_template: '{{ now().hour > 18 }}' # seulement après 18h00
       - condition: template # une seule notification par jour 
