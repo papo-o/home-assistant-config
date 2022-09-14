@@ -1,0 +1,103 @@
+####################################################################################
+####################################################################################
+####################################################################################
+ #   _____ _____   ____  _    _ _____   _____ 
+ #  / ____|  __ \ / __ \| |  | |  __ \ / ____|
+ # | |  __| |__) | |  | | |  | | |__) | (___  
+ # | | |_ |  _  /| |  | | |  | |  ___/ \___ \ 
+ # | |__| | | \ \| |__| | |__| | |     ____) |
+ #  \_____|_|  \_\\____/ \____/|_|    |_____/ 
+group:
+# https://www.home-assistant.io/integrations/group/
+####################################################################################
+  fenetres_pluie:
+    name: 'Fenêtres avec risque de pluie'
+    entities:
+      - binary_sensor.fenetre_douche
+      - binary_sensor.fenetre_chambre
+
+####################################################################################
+####################################################################################
+####################################################################################
+ #  _____ _   _ _____  _    _ _______   ____   ____   ____  _      ______          _   _ 
+ # |_   _| \ | |  __ \| |  | |__   __| |  _ \ / __ \ / __ \| |    |  ____|   /\   | \ | |
+ #   | | |  \| | |__) | |  | |  | |    | |_) | |  | | |  | | |    | |__     /  \  |  \| |
+ #   | | | . ` |  ___/| |  | |  | |    |  _ <| |  | | |  | | |    |  __|   / /\ \ | . ` |
+ #  _| |_| |\  | |    | |__| |  | |    | |_) | |__| | |__| | |____| |____ / ____ \| |\  |
+ # |_____|_| \_|_|     \____/   |_|    |____/ \____/ \____/|______|______/_/    \_\_| \_|
+binary_sensor: # https://www.home-assistant.io/integrations/binary_sensor.template/
+# ##################################################################################
+  - platform: template
+    sensors:
+      fenetres_ouvertes_pluie:
+        value_template: "{{ is_state('group.fenetres_pluie', 'on') and is_state('switch.presence_pluie', 'on')}}"
+        friendly_name: 'fenetres ouvertes et pluie'
+
+# ##################################################################################
+# ##################################################################################
+# ##################################################################################
+ # #          _    _ _______ ____  __  __       _______ _____ ____  _   _  _____ 
+ # #     /\  | |  | |__   __/ __ \|  \/  |   /\|__   __|_   _/ __ \| \ | |/ ____|
+ # #    /  \ | |  | |  | | | |  | | \  / |  /  \  | |    | || |  | |  \| | (___  
+ # #   / /\ \| |  | |  | | | |  | | |\/| | / /\ \ | |    | || |  | | . ` |\___ \ 
+ # #  / ____ \ |__| |  | | | |__| | |  | |/ ____ \| |   _| || |__| | |\  |____) |
+ # # /_/    \_\____/   |_|  \____/|_|  |_/_/    \_\_|  |_____\____/|_| \_|_____/ 
+automation:
+# https://www.home-assistant.io/integrations/automation/
+###################################################################################
+- alias: "Telegram callback to stop alerts for fenetres ouvertes pluie"
+  trigger:
+    - platform: event
+      event_type: telegram_callback
+      event_data:
+        data: "/inhiber_fenetres_ouvertes_pluie"
+  action:
+    - service: alert.turn_off
+      target:
+        entity_id: alert.alert_fenetres_ouvertes_pluie
+
+- alias: "Telegram callback to stop alerts for fenetres ouvertes pluie"
+  trigger:
+    - platform: event
+      event_type: telegram_callback
+      event_data:
+        data: "/reactiver_fenetres_ouvertes_pluie"
+  action:
+    - service: alert.turn_on
+      target:
+        entity_id: alert.alert_fenetres_ouvertes_pluie
+
+###################################################################################
+###################################################################################
+###################################################################################
+ #           _      ______ _____ _______ _____ 
+ #     /\   | |    |  ____|  __ \__   __/ ____|
+ #    /  \  | |    | |__  | |__) | | | | (___  
+ #   / /\ \ | |    |  __| |  _  /  | |  \___ \ 
+ #  / ____ \| |____| |____| | \ \  | |  ____) |
+ # /_/    \_\______|______|_|  \_\ |_| |_____/ 
+alert: # https://www.home-assistant.io/integrations/alert/
+###################################################################################
+  alert_fenetres_ouvertes_pluie:
+    name: "fenetres ouvertes par temps de pluie"
+    message: "il pleut : {{ expand('group.fenetres_pluie') | selectattr('state', 'eq', 'on') | map(attribute='name')| list | join(', ') }} ouverte" 
+    done_message: "fin de l'alerte fenetres ouvertes par temps de pluie"
+    entity_id: binary_sensor.fenetres_ouvertes_pluie
+    state: "on"   # Optional, 'on' is the default value
+    repeat:
+      - 2
+      - 15
+      - 30
+      - 60
+      - 120
+    can_acknowledge: true  # Optional, default is true
+    skip_first: true  # Optional, false is the default
+    data:
+      inline_keyboard:
+        - 'Inhiber alerte:/inhiber_fenetres_ouvertes_pluie, Réactiver alerte:/reactiver_fenetres_ouvertes_pluie'
+
+    notifiers:
+      - telegram
+      - ios
+      - echo_jour
+
